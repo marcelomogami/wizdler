@@ -34,7 +34,10 @@ var App = {
 		if (chrome.tabs)
 			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) { var tab = tabs[0];
 				chrome.tabs.sendMessage(tab.id, { command: 'getXml' }, function(data) {
-					callback(null, data);
+					if (chrome.runtime.lastError || !data)
+						callback(new Error('Esta página não contém um WSDL.'));
+					else
+						callback(null, data);
 				});
 			});
 		// otherwise, it is downloaded from the specified URL 
@@ -186,7 +189,7 @@ var App = {
 	// Called when WSDL is read.
 	onReceiveWSDL: function(err, data) {
 		if (err) {
-			alert(err.message);
+			$('#tree').html('<p style="padding:10px;color:#c00">' + err.message + '</p>');
 			return;
 		}
 		App.getUrl(function(url) {
