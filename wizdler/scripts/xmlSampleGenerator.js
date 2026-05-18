@@ -261,8 +261,11 @@ XmlSampleGenerator.prototype = {
 		});
 	},
 
-	generateAny: function() {
-		// TODO: implementation
+	generateAny: function(particle, iGrp) {
+		var elem = new InstanceElement(new XmlQualifiedName(null, 'anyElement'));
+		elem.occurs = 1;
+		elem.valueGenerator = { generateValue: function() { return ''; } };
+		iGrp.addChild(elem);
 	},
 	
 	getParticles: function(schemaType) {
@@ -317,7 +320,7 @@ XmlSampleGenerator.prototype = {
 	},
 	
 	getOccurs: function(minOccurs, maxOccurs) {
-		return minOccurs;
+		return Math.max(minOccurs, 1);
 	},
 	
 	getMinOccurs: function(el) {
