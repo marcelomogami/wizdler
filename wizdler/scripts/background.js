@@ -1,16 +1,8 @@
-// Disable action by default when tab starts loading (replaces page_action behavior)
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
-	if (changeInfo.status === 'loading') {
-		chrome.action.disable(tabId);
-	}
-});
-
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		var command = request && request.command;
 		switch (command) {
 			case 'showPageAction':
-				chrome.action.enable(sender.tab.id);
 				sendResponse();
 				break;
 
