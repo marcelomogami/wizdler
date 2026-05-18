@@ -4,21 +4,6 @@ var App = {
 	// Initializes scroller.
 	initializeScroller: function() {
 		$('body').addClass('scroller');
-		$('#tree').wrap(
-			$('<div class="antiscroll-wrap">')
-				.append($('<div class="antiscroll-inner">'))
-		);
-		setTimeout(function() {
-			var scroller = $('.antiscroll-wrap').antiscroll().data('antiscroll');
-			var resize = function() {
-				scroller.inner
-					.width($(window).width())
-					.height($(window).height());
-				scroller.refresh();
-			};
-			$(window).resize(resize);
-			resize();
-		}, 500);
 	},
 
 	// Downloads data interactively.
