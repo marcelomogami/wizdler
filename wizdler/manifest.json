@@ -11,7 +11,7 @@
 	},
 	"action": {
 		"default_icon": "images/asmx16.png",
-		"default_title": "Browse WSDL...",
+		"default_title": "Wizdler",
 		"default_popup": "popup.html"
 	},
 	"background": {
