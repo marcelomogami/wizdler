@@ -1,29 +1,6 @@
 var App = {
 	url: null,
 
-	// Initializes expand/collapse images (used in CSS).
-	initializeCanvasImages: function() {
-		var ctx = document.getCSSCanvasContext('2d', 'arrowRight', 10, 10);
-		ctx.fillStyle = 'rgb(90,90,90)';
-		ctx.beginPath();
-		ctx.moveTo(0, 0);
-		ctx.lineTo(0, 8);
-		ctx.lineTo(7, 4);
-		ctx.lineTo(0, 0);
-		ctx.fill();
-		ctx.closePath();
-
-		var ctx = document.getCSSCanvasContext('2d', 'arrowDown', 10, 10);
-		ctx.fillStyle = 'rgb(90,90,90)';
-		ctx.beginPath();
-		ctx.moveTo(0, 0);
-		ctx.lineTo(8, 0);
-		ctx.lineTo(4, 7);
-		ctx.lineTo(0, 0);
-		ctx.fill();
-		ctx.closePath();
-	},
-
 	// Initializes scroller.
 	initializeScroller: function() {
 		$('body').addClass('scroller');
@@ -48,8 +25,8 @@ var App = {
 	downloadFile: function(name, data) {
 		// if in extension, the content page must download the file
 		if (chrome.tabs) {
-			chrome.tabs.getSelected(null, function(tab) {
-				chrome.tabs.sendRequest(tab.id, {
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) { var tab = tabs[0];
+				chrome.tabs.sendMessage(tab.id, {
 					command: 'download',
 					name: name,
 					data: data
@@ -70,8 +47,8 @@ var App = {
 	getWSDL: function(callback) {
 		// if in extension, the WSDL is retrieved via content page
 		if (chrome.tabs)
-			chrome.tabs.getSelected(null, function(tab) {
-				chrome.tabs.sendRequest(tab.id, { command: 'getXml' }, function(data) {
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) { var tab = tabs[0];
+				chrome.tabs.sendMessage(tab.id, { command: 'getXml' }, function(data) {
 					callback(null, data);
 				});
 			});
@@ -93,7 +70,7 @@ var App = {
 	// downloading the imported XSD files.
 	getUrl: function(callback) {
 		if (chrome.tabs)
-			chrome.tabs.getSelected(null, function(tab) {
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) { var tab = tabs[0];
 				callback(tab.url);
 			});
 		else
@@ -197,9 +174,9 @@ var App = {
 
 	sendTabRequest: function(request, callback, args) {
 		var me = this;
-		chrome.tabs.getSelected(null, function(tab) {
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) { var tab = tabs[0];
 			var doRequest = function() {
-				chrome.tabs.sendRequest(tab.id, request, function(err) {
+				chrome.tabs.sendMessage(tab.id, request, function(err) {
 					console.log(args);
 					if (callback)
 						callback.apply(me, args || new Array);
@@ -218,7 +195,7 @@ var App = {
 			console.log(req);
 			return;
 		}
-		chrome.extension.sendRequest(req);
+		chrome.runtime.sendMessage(req);
 	},
 
 	// Called when WSDL is read.
@@ -295,7 +272,6 @@ var App = {
 	},
 	
 	run: function() {
-		this.initializeCanvasImages();
 		$(document).on('click', 'ul.collapsible li>span:first-child', this.onListItemClick);
 		$(document).on('click', 'a[id=wsdl]', this.onServiceClick);
 		$(document).on('click', 'ul.operations>li>a', this.onOperationClick);

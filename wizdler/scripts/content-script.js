@@ -12,8 +12,8 @@ if (xmlContent) {
 	if (root.namespaceURI == ns.wsdl && root.localName == 'definitions') {
 		if (!chrome.extension)
 			return;
-		chrome.extension.onRequest.addListener(onRequest);
-		chrome.extension.sendRequest({
+		chrome.runtime.onMessage.addListener(onRequest);
+		chrome.runtime.sendMessage({
 			command: 'showPageAction'
 		});
 	}
