@@ -189,7 +189,7 @@ var App = {
 	// Called when WSDL is read.
 	onReceiveWSDL: function(err, data) {
 		if (err) {
-			$('#tree').html('<p style="padding:10px;color:#c00">' + err.message + '</p>');
+			$('#tree').html('<p class="msg-error">' + err.message + '</p>');
 			return;
 		}
 		App.getUrl(function(url) {
